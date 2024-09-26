@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 
 const Header = () => {
@@ -36,19 +36,19 @@ const Header = () => {
     }
   }, [cursorRef]);
 
-  const translateX = `calc(${mouseLoc.x}px - ${cursorSize.width / 2}px)`;
-  const translateY = `calc(${mouseLoc.y}px - ${cursorSize.height / 2}px)`;
+  useLayoutEffect(() => {
+    if (cursorRef.current) {
+      const cursorRect = cursorRef.current.getBoundingClientRect();
+      const translateX = `calc(${mouseLoc.x}px - ${cursorRect.width / 2}px)`;
+      const translateY = `calc(${mouseLoc.y}px - ${cursorRect.height / 2}px)`;
+      cursorRef.current.style.transform = `translate(${translateX}, ${translateY})`;
+    }
+  }, [mouseLoc]);
   return (
     <>
       <div
-        className="opacity-40 rounded-full cursor"
+        className="opacity-40 rounded-full cursor pointer-events-none"
         ref={cursorRef}
-        style={{
-          transform: `
-    translate(${translateX}, ${translateY})
-  `,
-          pointerEvents: "none",
-        }}
       ></div>
       <header className="title text-5xl pt-4 mb-8 w-[400px] ">
         <div className="flex flex-col items-center justify-center h-svh">
