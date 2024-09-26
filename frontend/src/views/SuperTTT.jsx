@@ -16,7 +16,7 @@ const SuperTTT = () => {
   const [board, setBoard] = useState(
     new Array(9).fill(new Array(9).fill(null))
   );
-
+  const [finalWinner, setFinalWinner] = useState(null);
   const [currMove, setCurrMove] = useState("X");
 
   const checkForWinner = (board) => {
@@ -26,7 +26,8 @@ const SuperTTT = () => {
         board[i + 3] === board[i + 6] &&
         board[i] &&
         board[i + 3] &&
-        board[i + 6]
+        board[i + 6] &&
+        board[i] !== DRAW
       ) {
         return board[i];
       }
@@ -38,7 +39,8 @@ const SuperTTT = () => {
         board[i + 1] === board[i + 2] &&
         board[i] &&
         board[i + 1] &&
-        board[i + 2]
+        board[i + 2] &&
+        board[i] !== DRAW
       ) {
         return board[i];
       }
@@ -49,7 +51,8 @@ const SuperTTT = () => {
       board[8] === board[4] &&
       board[0] &&
       board[4] &&
-      board[8]
+      board[8] &&
+      board[0] !== DRAW
     )
       return board[0];
     if (
@@ -57,7 +60,8 @@ const SuperTTT = () => {
       board[6] === board[4] &&
       board[2] &&
       board[4] &&
-      board[6]
+      board[6] &&
+      board[2] !== DRAW
     )
       return board[2];
 
@@ -68,7 +72,7 @@ const SuperTTT = () => {
     if (board[i][j]) {
       return;
     }
-
+    const newCompletedBoards = [...completedBoards];
     if (enabledBoards.includes(i)) {
       const newBoard = board.map((row) => [...row]);
       if (currMove === "X") {
@@ -82,7 +86,12 @@ const SuperTTT = () => {
         const newBoardWinner = [...boardWinner];
         newBoardWinner[i] = hasWinner;
         setBoardWinner(newBoardWinner);
-        setCompletedBoards([...completedBoards, i]);
+        newCompletedBoards.push(i);
+        setCompletedBoards(newCompletedBoards);
+        const hasFinalWinner = checkForWinner(newBoardWinner);
+        if (hasFinalWinner) {
+          setFinalWinner(hasFinalWinner);
+        }
       } else {
         let nullCounts = 0;
         for (let cell of newBoard[i]) {
@@ -94,13 +103,14 @@ const SuperTTT = () => {
           const newBoardWinner = [...boardWinner];
           newBoardWinner[i] = DRAW;
           setBoardWinner(newBoardWinner);
-          setCompletedBoards([...completedBoards, i]);
+          newCompletedBoards.push(i);
+          setCompletedBoards(newCompletedBoards);
         }
       }
-      if (completedBoards.includes(j)) {
+      if (newCompletedBoards.includes(j)) {
         setEnabledBoards(
           [0, 1, 2, 3, 4, 5, 6, 7, 8].filter(
-            (idx) => !completedBoards.includes(idx)
+            (idx) => !newCompletedBoards.includes(idx)
           )
         );
       } else setEnabledBoards([j]);
@@ -113,40 +123,49 @@ const SuperTTT = () => {
   };
 
   return (
-    <div className="flex h-full md:flex-col">
+    <div className="flex h-full md:flex-col ">
       <Header />
+      <div className="absolute left-8 top-8 text-xl">
+        Current turn: {currMove}
+        <br />
+        Enabled boards: {enabledBoards.join(" ")}
+      </div>
       <div className="w-[702px] h-[702px] border-white mt-5 mx-auto flex flex-wrap ">
-        {sigleGame.map((row, i) =>
-          completedBoards.includes(i) ? (
-            <div
-              key={i}
-              className="w-[234px] h-[234px] border-2 border-cyan-500 cursor-not-allowed pointer-events-none text-center font-bold text-2xl"
-            >
-              <img src={boardWinner[i]} className="w-[230px] h-[230px]" />
-            </div>
-          ) : (
-            <div
-              key={i}
-              className={`w-[234px] h-[234px] border-2 border-cyan-500 flex flex-wrap ${
-                enabledBoards.includes(i)
-                  ? "hover:bg-neutral-300"
-                  : "cursor-not-allowed"
-              }`}
-            >
-              {singleCell.map((cell, j) => (
-                <div
-                  key={`${i} ${j}`}
-                  className={`w-[76.8px] h-[76.8px] border border-white ${
-                    enabledBoards.includes(i) && !board[i][j]
-                      ? "hover:bg-black"
-                      : "cursor-not-allowed pointer-events-none"
-                  }`}
-                  onClick={() => handleBoard(i, j)}
-                >
-                  <img src={board[i][j]} />
-                </div>
-              ))}
-            </div>
+        {finalWinner ? (
+          <img src={finalWinner} className="w-[690px] h-[690px]" />
+        ) : (
+          sigleGame.map((row, i) =>
+            completedBoards.includes(i) ? (
+              <div
+                key={i}
+                className="w-[234px] h-[234px] border-2 border-cyan-500 hover:cursor-not-allowed text-center font-bold text-2xl"
+              >
+                <img src={boardWinner[i]} className="w-[230px] h-[230px]" />
+              </div>
+            ) : (
+              <div
+                key={i}
+                className={`w-[234px] h-[234px] border-2 border-cyan-500 flex flex-wrap ${
+                  enabledBoards.includes(i)
+                    ? "hover:bg-neutral-700"
+                    : "cursor-not-allowed"
+                }`}
+              >
+                {singleCell.map((cell, j) => (
+                  <div
+                    key={`${i} ${j}`}
+                    className={`w-[76.8px] h-[76.8px] border border-white ${
+                      enabledBoards.includes(i) && !board[i][j]
+                        ? "hover:bg-black hover:cursor-pointer"
+                        : "cursor-not-allowed "
+                    }`}
+                    onClick={() => handleBoard(i, j)}
+                  >
+                    <img src={board[i][j]} />
+                  </div>
+                ))}
+              </div>
+            )
           )
         )}
       </div>
