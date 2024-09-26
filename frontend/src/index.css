@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  height: 100%;
+}
+
+.title {
+  font-family: "Sofadi One", system-ui;
+}
+.lato {
+  font-family: "Lato", sans-serif;
+}
+.cursor {
+  height: 500px;
+  position: absolute;
+
+  width: 500px;
+  background: radial-gradient(
+    circle farthest-side,
+    rgb(255, 0, 255),
+    rgba(255, 0, 255, 0.9),
+    rgba(255, 0, 255, 0.8),
+    rgba(255, 0, 255, 0.7),
+    rgba(255, 0, 255, 0.6),
+    rgba(255, 0, 255, 0.5),
+    rgba(255, 0, 255, 0.4),
+    rgba(255, 0, 255, 0.3),
+    rgba(255, 0, 255, 0.2),
+    rgba(255, 0, 255, 0.1),
+    rgba(255, 0, 255, 0)
+  );
+}
+
+html,
+body {
+  height: 100%;
+  color: white;
+  background: black;
+  font-family: "Sofadi One", system-ui;
+}
