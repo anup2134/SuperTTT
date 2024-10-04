@@ -1,10 +1,9 @@
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [mouseLoc, setMouseLoc] = useState({ x: 0, y: 0 });
-  const [cursorSize, setCursorSize] = useState({ width: 0, height: 0 });
   const cursorRef = useRef(null);
   const navigate = useNavigate();
 
@@ -22,37 +21,33 @@ const HomePage = () => {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (cursorRef.current) {
-      gsap.to(cursorRef.current, {
+      const animation = gsap.to(cursorRef.current, {
         x: mouseLoc.x,
         y: mouseLoc.y,
       });
+
+      return () => {
+        animation.kill();
+      };
+    }
+  }, [cursorRef, mouseLoc]);
+
+  useLayoutEffect(() => {
+    if (cursorRef.current) {
+      const cursorRect = cursorRef.current.getBoundingClientRect();
+      const translateX = `calc(${mouseLoc.x}px - ${cursorRect.width / 2}px)`;
+      const translateY = `calc(${mouseLoc.y}px - ${cursorRect.height / 2}px)`;
+      cursorRef.current.style.transform = `translate(${translateX}, ${translateY})`;
     }
   }, [mouseLoc]);
-
-  useEffect(() => {
-    if (cursorRef.current) {
-      const width = cursorRef.current.offsetWidth;
-      const height = cursorRef.current.offsetHeight;
-      setCursorSize({ width, height });
-    }
-  }, [cursorRef]);
-
-  const translateX = `calc(${mouseLoc.x}px - ${cursorSize.width / 2}px)`;
-  const translateY = `calc(${mouseLoc.y}px - ${cursorSize.height / 2}px)`;
 
   return (
     <div className="relative ">
       <div
-        className="opacity-40 rounded-full cursor"
+        className="opacity-40 rounded-full cursor pointer-events-none"
         ref={cursorRef}
-        style={{
-          transform: `
-            translate(${translateX}, ${translateY})
-          `,
-          pointerEvents: "none",
-        }}
       ></div>
       <header className="title w-full text-5xl pt-4 flex justify-center items-center relative">
         <h1 className="text-center">Super Tic Tac Toe</h1>

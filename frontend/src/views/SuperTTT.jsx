@@ -138,7 +138,7 @@ const SuperTTT = () => {
             completedBoards.includes(i) ? (
               <div
                 key={i}
-                className="w-[234px] h-[234px] border-2 border-cyan-500 hover:cursor-not-allowed text-center font-bold text-2xl"
+                className="w-[234px] h-[234px] border-2 border-[#04d9ff] hover:cursor-not-allowed text-center font-bold text-2xl"
               >
                 <img src={boardWinner[i]} className="w-[230px] h-[230px]" />
               </div>
