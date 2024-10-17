@@ -2,7 +2,7 @@ import { useState } from "react";
 import X from "../assets/X.svg";
 import O from "../assets/O.svg";
 import DRAW from "../assets/DRAW.svg";
-import Header from "../components/Header";
+import Gradient from "../components/Gradient";
 
 const SuperTTT = () => {
   const sigleGame = Array(9).fill(null);
@@ -124,7 +124,7 @@ const SuperTTT = () => {
 
   return (
     <div className="flex h-full md:flex-col ">
-      <Header />
+      <Gradient />
       <div className="absolute left-8 top-8 text-xl">
         Current turn: {currMove}
         <br />

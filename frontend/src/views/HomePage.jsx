@@ -65,7 +65,13 @@ const HomePage = () => {
           >
             Single Player
           </button>
-          <button>Play Online (random)</button>
+          <button
+            onClick={() => {
+              navigate("/multiplayer");
+            }}
+          >
+            Play Online (random)
+          </button>
           <button>Play with a friend</button>
         </div>
       </section>

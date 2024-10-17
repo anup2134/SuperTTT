@@ -3,8 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
-      md: { max: "1100px" },
-      sm: { max: "750px" },
+      lg: { max: "1600px" },
+      md: { max: "800px" },
+      sm: { max: "500px" },
     },
     extend: {
       animation: {
