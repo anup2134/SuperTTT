@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import X from "../assets/X.svg";
 import O from "../assets/O.svg";
 import Gradient from "../components/Gradient";
@@ -9,60 +10,215 @@ import {
   DiagonalLineRight,
 } from "../components/Lines";
 
-const Board = () => {
-  const getGame = () => {
-    const game = {};
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        for (let k = 0; k < 3; k++) {
-          for (let l = 0; l < 3; l++) {
-            game[`${i}${j}${k}${l}`] = 0;
-          }
-        }
-      }
-    }
-    return game;
-  };
-
-  const getExpandLines = () => {
-    const expandLines = {};
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        expandLines[`${i}${j}`] = null;
-      }
-    }
-    return expandLines;
-  };
-
-  const [game, setGame] = useState(getGame());
-  const [completeBoards, setCompleteBoards] = useState({});
-  const [prevMove, setPrevMove] = useState({});
-  const [winner, setWinner] = useState(null);
+const Board = ({
+  game,
+  myTurn,
+  completeBoards,
+  setCompleteBoards,
+  prevMove,
+  winner,
+  setWinner,
+  allowedAnywhere,
+  setAllowedAnywhere,
+  allowedGrid,
+  setAllowedGrid,
+  totalMoves,
+  expandLines,
+  setExpandLines,
+  handleMove,
+}) => {
   const [touchDevice, setTouchDevice] = useState(false);
-  const [allowedAnywhere, setAllowedAnywhere] = useState(true);
-  const [allowedGrid, setAllowedGrid] = useState("");
-  const [totalMoves, setTotalMoves] = useState(0);
-  const [expandLines, setExpandLines] = useState(getExpandLines());
 
-  const validMove = (i, j) => {
-    if (prevMove.x === undefined || prevMove.y === undefined) {
-      return true;
+  useEffect(() => {
+    if (prevMove.i === undefined) {
+      return;
     }
-    if (completeBoards[`${i}${j}`]) {
-      return false;
+
+    if (
+      game[`${prevMove.i}${prevMove.j}00`] ===
+        game[`${prevMove.i}${prevMove.j}11`] &&
+      game[`${prevMove.i}${prevMove.j}22`] ===
+        game[`${prevMove.i}${prevMove.j}11`] &&
+      game[`${prevMove.i}${prevMove.j}00`] !== 0
+    ) {
+      setExpandLines((prevExpandLines) => ({
+        ...prevExpandLines,
+        [`${prevMove.i}${prevMove.j}`]: "diagLeft",
+      }));
+      setCompleteBoards((prevCompleteBoards) => ({
+        ...prevCompleteBoards,
+        [`${prevMove.i}${prevMove.j}`]: prevMove.player,
+      }));
+      return;
     }
-    let playAnyWhere = false;
+
+    if (
+      game[`${prevMove.i}${prevMove.j}02`] ===
+        game[`${prevMove.i}${prevMove.j}11`] &&
+      game[`${prevMove.i}${prevMove.j}11`] ===
+        game[`${prevMove.i}${prevMove.j}20`] &&
+      game[`${prevMove.i}${prevMove.j}11`] !== 0
+    ) {
+      setExpandLines((prevExpandLines) => ({
+        ...prevExpandLines,
+        [`${prevMove.i}${prevMove.j}`]: "diagRight",
+      }));
+      setCompleteBoards((prevCompleteBoards) => ({
+        ...prevCompleteBoards,
+        [`${prevMove.i}${prevMove.j}`]: prevMove.player,
+      }));
+      return;
+    }
+
+    let count = 0;
+    for (let i = 0; i < 3; i++) {
+      if (game[`${prevMove.i}${prevMove.j}${i}0`] === 0) {
+        count++;
+      }
+      if (game[`${prevMove.i}${prevMove.j}${i}1`] === 0) {
+        count++;
+      }
+      if (game[`${prevMove.i}${prevMove.j}${i}2`] === 0) {
+        count++;
+      }
+      if (
+        game[`${prevMove.i}${prevMove.j}${i}0`] ===
+          game[`${prevMove.i}${prevMove.j}${i}1`] &&
+        game[`${prevMove.i}${prevMove.j}${i}2`] ===
+          game[`${prevMove.i}${prevMove.j}${i}1`] &&
+        game[`${prevMove.i}${prevMove.j}${i}0`] !== 0
+      ) {
+        setExpandLines((prevExpandLines) => ({
+          ...prevExpandLines,
+          [`${prevMove.i}${prevMove.j}`]: `hori${i}`,
+        }));
+        setCompleteBoards((prevCompleteBoards) => ({
+          ...prevCompleteBoards,
+          [`${prevMove.i}${prevMove.j}`]: prevMove.player,
+        }));
+        return;
+      }
+      if (
+        game[`${prevMove.i}${prevMove.j}0${i}`] ===
+          game[`${prevMove.i}${prevMove.j}1${i}`] &&
+        game[`${prevMove.i}${prevMove.j}2${i}`] ===
+          game[`${prevMove.i}${prevMove.j}1${i}`] &&
+        game[`${prevMove.i}${prevMove.j}0${i}`] !== 0
+      ) {
+        setExpandLines((prevExpandLines) => ({
+          ...prevExpandLines,
+          [`${prevMove.i}${prevMove.j}`]: `vert${i}`,
+        }));
+        setCompleteBoards((prevCompleteBoards) => ({
+          ...prevCompleteBoards,
+          [`${prevMove.i}${prevMove.j}`]: prevMove.player,
+        }));
+        return;
+      }
+    }
+
+    if (count === 0) {
+      setCompleteBoards((prevCompleteBoards) => ({
+        ...prevCompleteBoards,
+        [`${prevMove.i}${prevMove.j}`]: "draw",
+      }));
+    }
+  }, [prevMove, game]);
+
+  useEffect(() => {
+    if (prevMove.i === undefined) {
+      setAllowedAnywhere(true);
+      return;
+    }
     if (completeBoards[`${prevMove.x}${prevMove.y}`]) {
-      playAnyWhere = true;
+      setAllowedAnywhere(true);
+    } else {
+      setAllowedGrid(`${prevMove.x}${prevMove.y}`);
+      setAllowedAnywhere(false);
+    }
+  }, [prevMove, completeBoards]);
+
+  useEffect(() => {
+    if (
+      completeBoards["11"] &&
+      completeBoards["00"] &&
+      completeBoards["22"] &&
+      completeBoards["11"] === completeBoards["00"] &&
+      completeBoards["11"] === completeBoards["22"]
+    ) {
+      setWinner(completeBoards["11"]);
+      return;
     }
 
-    if ((prevMove.x !== i || prevMove.y !== j) && !playAnyWhere) {
-      return false;
+    if (
+      completeBoards["11"] &&
+      completeBoards["20"] &&
+      completeBoards["02"] &&
+      completeBoards["11"] === completeBoards["02"] &&
+      completeBoards["11"] === completeBoards["20"]
+    ) {
+      setWinner(completeBoards["11"]);
+      return;
     }
 
-    return true;
-  };
+    for (let i = 0; i < 3; i++) {
+      if (
+        completeBoards[`${i}0`] &&
+        completeBoards[`${i}1`] &&
+        completeBoards[`${i}2`] &&
+        completeBoards[`${i}0`] === completeBoards[`${i}1`] &&
+        completeBoards[`${i}0`] === completeBoards[`${i}2`]
+      ) {
+        setWinner(completeBoards[`${i}0`]);
+        return;
+      }
+
+      if (
+        completeBoards[`0${i}`] &&
+        completeBoards[`1${i}`] &&
+        completeBoards[`2${i}`] &&
+        completeBoards[`0${i}`] === completeBoards[`1${i}`] &&
+        completeBoards[`0${i}`] === completeBoards[`2${i}`]
+      ) {
+        setWinner(completeBoards[`0${i}`]);
+        return;
+      }
+    }
+  }, [completeBoards]);
+
+  useEffect(() => {
+    // console.log(totalMoves);
+    if (winner === null && totalMoves >= 81) {
+      console.log("draw");
+    } else if (winner) {
+      console.log("winner is:", winner);
+    }
+  }, [winner, totalMoves]);
+
+  const [screenRes, setScreenRes] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenRes({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    const handleDevice = () => {
+      setTouchDevice(true);
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("touchstart", handleDevice);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("touchstart", handleDevice);
+    };
+  }, []);
 
   return (
     <div className="mt-8 sm:mt-14">
