@@ -29,6 +29,6 @@ app.get("/", (req, res) => {
   res.send("http get request");
 });
 
-server.listen(process.env.PORT || 3000, () => {
-  console.log(`server listening on port: ${3000}`);
+server.listen(10000, () => {
+  console.log(`server listening on port: ${10000}`);
 });
