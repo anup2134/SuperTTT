@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { Game } from "./Game.ts";
+import { Game } from "./Game";
 import crypto from "crypto";
 
 export class Player {
@@ -53,7 +53,7 @@ export class Player {
 
     this.timerId = setTimeout(() => {
       this.game?.setWinner(this.opponent!);
-    }, 35 * 10000);
+    }, 1000 * 35);
   }
 
   public endTimer() {

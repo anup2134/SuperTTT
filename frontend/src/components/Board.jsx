@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import X from "../assets/X.svg";
 import O from "../assets/O.svg";
 import Gradient from "../components/Gradient";
@@ -9,6 +9,9 @@ import {
   DiagonalLineLeft,
   DiagonalLineRight,
 } from "../components/Lines";
+import { AppContext } from "../Context";
+import { Link } from "react-router-dom";
+import Rules from "./Rules";
 
 const Board = ({
   game,
@@ -26,8 +29,10 @@ const Board = ({
   expandLines,
   setExpandLines,
   handleMove,
+  children,
 }) => {
   const [touchDevice, setTouchDevice] = useState(false);
+  const { screenRes } = useContext(AppContext);
 
   useEffect(() => {
     if (prevMove.i === undefined) {
@@ -187,7 +192,6 @@ const Board = ({
   }, [completeBoards]);
 
   useEffect(() => {
-    // console.log(totalMoves);
     if (winner === null && totalMoves >= 81) {
       console.log("draw");
     } else if (winner) {
@@ -195,120 +199,130 @@ const Board = ({
     }
   }, [winner, totalMoves]);
 
-  const [screenRes, setScreenRes] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
   useEffect(() => {
-    const handleResize = () => {
-      setScreenRes({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
     const handleDevice = () => {
       setTouchDevice(true);
     };
 
-    window.addEventListener("resize", handleResize);
     window.addEventListener("touchstart", handleDevice);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
       window.removeEventListener("touchstart", handleDevice);
     };
   }, []);
 
+  const [showRules, setShowRules] = useState(false);
+
   return (
-    <div className="mt-8 sm:mt-14">
+    <>
       {!touchDevice && <Gradient />}
-      {[0, 1, 2].map((i) => {
-        return (
-          <div
-            key={i}
-            id={i}
-            className={`${
-              screenRes.width <= screenRes.height
-                ? "w-[90vw] h-[30vw] "
-                : "w-[90vh] h-[30vh]"
-            } border mx-auto flex border-[#04d9ff]`}
-          >
-            {[0, 1, 2].map((j) => {
-              return (
-                <div
-                  key={`${i}${j}`}
-                  id={`${i}${j}`}
-                  className={`${
-                    j !== 2 ? "border-r" : ""
-                  } border-[#04d9ff] h-[100%] w-[33.3%] ${
-                    myTurn
-                      ? allowedAnywhere
-                        ? completeBoards[`${i}${j}`]
-                          ? ""
-                          : "hover:bg-[#ffffff33]"
-                        : allowedGrid === `${i}${j}`
-                        ? "hover:bg-[#ffffff33]"
-                        : ""
-                      : ""
-                  } relative`}
-                >
-                  <DiagonalLineLeft expand={expandLines[`${i}${j}`]} />
-                  <DiagonalLineRight expand={expandLines[`${i}${j}`]} />
-                  <VerticalLine expand={expandLines[`${i}${j}`]} />
-                  <HorizontalLine expand={expandLines[`${i}${j}`]} />
-                  {[0, 1, 2].map((x) => {
-                    return (
-                      <div
-                        key={`${i}${j}${x}`}
-                        id={`${i}${j}${x}`}
-                        className={`w-full h-[33.3%] ${
-                          x !== 2 ? "border-b" : ""
-                        } border-white flex`}
-                      >
-                        {[0, 1, 2].map((y) => {
-                          return (
-                            <div
-                              key={`${i}${j}${x}${y}`}
-                              id={`${i}${j}${x}${y}`}
-                              className={`h-full w-[33.3%] ${
-                                y !== 2 ? "border-r" : ""
-                              } border-white ${
-                                myTurn
-                                  ? allowedAnywhere
-                                    ? completeBoards[`${i}${j}`] ||
-                                      game[`${i}${j}${x}${y}`] !== 0
-                                      ? "hover:cursor-not-allowed "
-                                      : "hover:cursor-pointer hover:bg-black"
-                                    : allowedGrid === `${i}${j}` &&
-                                      game[`${i}${j}${x}${y}`] === 0
-                                    ? "hover:cursor-pointer hover:bg-black"
-                                    : "hover:cursor-not-allowed"
-                                  : "hover:cursor-not-allowed"
-                              } flex justify-center items-center`}
-                              onClick={(e) => {
-                                handleMove(e);
-                              }}
-                            >
-                              {game[`${i}${j}${x}${y}`] === 1 ? (
-                                <img src={X} className="w-full h-full" />
-                              ) : null}
-                              {game[`${i}${j}${x}${y}`] === 2 ? (
-                                <img src={O} className="w-4/5 h-4/5" />
-                              ) : null}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </div>
+      {showRules && <Rules showRules={showRules} setShowRules={setShowRules} />}
+      <div className="mt-8 sm:mt-14">
+        <Link
+          to="/"
+          className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 shadow-sm shadow-white"
+        >
+          Home
+        </Link>
+        <button
+          className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 mt-12 shadow-sm shadow-white"
+          onClick={() => {
+            setShowRules(true);
+          }}
+        >
+          Rules
+        </button>
+        <div className="relative w-max m-auto">
+          {[0, 1, 2].map((i) => {
+            return (
+              <div
+                key={i}
+                id={i}
+                className={`${
+                  screenRes.width <= screenRes.height
+                    ? "w-[90vw] h-[30vw] "
+                    : "w-[90vh] h-[30vh]"
+                } border flex border-[#04d9ff]`}
+              >
+                <div></div>
+                {[0, 1, 2].map((j) => {
+                  return (
+                    <div
+                      key={`${i}${j}`}
+                      id={`${i}${j}`}
+                      className={`${
+                        j !== 2 ? "border-r" : ""
+                      } border-[#04d9ff] h-[100%] w-[33.3%] ${
+                        myTurn
+                          ? allowedAnywhere
+                            ? completeBoards[`${i}${j}`]
+                              ? ""
+                              : "hover:bg-[#ffffff33]"
+                            : allowedGrid === `${i}${j}`
+                            ? "hover:bg-[#ffffff33]"
+                            : ""
+                          : ""
+                      } relative`}
+                    >
+                      <DiagonalLineLeft expand={expandLines[`${i}${j}`]} />
+                      <DiagonalLineRight expand={expandLines[`${i}${j}`]} />
+                      <VerticalLine expand={expandLines[`${i}${j}`]} />
+                      <HorizontalLine expand={expandLines[`${i}${j}`]} />
+                      {[0, 1, 2].map((x) => {
+                        return (
+                          <div
+                            key={`${i}${j}${x}`}
+                            id={`${i}${j}${x}`}
+                            className={`w-full h-[33.3%] ${
+                              x !== 2 ? "border-b" : ""
+                            } border-white flex`}
+                          >
+                            {[0, 1, 2].map((y) => {
+                              return (
+                                <div
+                                  key={`${i}${j}${x}${y}`}
+                                  id={`${i}${j}${x}${y}`}
+                                  className={`h-full w-[33.3%] ${
+                                    y !== 2 ? "border-r" : ""
+                                  } border-white ${
+                                    myTurn
+                                      ? allowedAnywhere
+                                        ? completeBoards[`${i}${j}`] ||
+                                          game[`${i}${j}${x}${y}`] !== 0
+                                          ? "hover:cursor-not-allowed "
+                                          : "hover:cursor-pointer hover:bg-black"
+                                        : allowedGrid === `${i}${j}` &&
+                                          game[`${i}${j}${x}${y}`] === 0
+                                        ? "hover:cursor-pointer hover:bg-black"
+                                        : "hover:cursor-not-allowed"
+                                      : "hover:cursor-not-allowed"
+                                  } flex justify-center items-center`}
+                                  onClick={(e) => {
+                                    handleMove(e);
+                                  }}
+                                >
+                                  {game[`${i}${j}${x}${y}`] === 1 ? (
+                                    <img src={X} className="w-full h-full" />
+                                  ) : null}
+                                  {game[`${i}${j}${x}${y}`] === 2 ? (
+                                    <img src={O} className="w-4/5 h-4/5" />
+                                  ) : null}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+          {children}
+        </div>
+      </div>
+    </>
   );
 };
 

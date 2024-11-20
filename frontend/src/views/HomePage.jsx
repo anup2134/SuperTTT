@@ -1,11 +1,13 @@
 import gsap from "gsap";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Rules from "../components/Rules";
 
 const HomePage = () => {
   const [mouseLoc, setMouseLoc] = useState({ x: 0, y: 0 });
   const cursorRef = useRef(null);
   const navigate = useNavigate();
+  const [showRules, setShowRules] = useState(false);
 
   const handleMouseMove = (e) => {
     const xCord = e.clientX;
@@ -44,38 +46,46 @@ const HomePage = () => {
   }, [mouseLoc]);
 
   return (
-    <div className="relative ">
-      <div
-        className="opacity-40 rounded-full cursor pointer-events-none"
-        ref={cursorRef}
-      ></div>
-      <header className="title w-full text-5xl pt-4 flex justify-center items-center relative">
-        <h1 className="text-center">Super Tic Tac Toe</h1>
-        <button className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 shadow-sm shadow-white">
-          Rules
-        </button>
-      </header>
-      <section className="mt-36">
-        <div className="flex flex-col items-center gap-10 text-2xl">
+    <>
+      {showRules && <Rules showRules={showRules} setShowRules={setShowRules} />}
+      <div className="relative">
+        <div
+          className="opacity-40 rounded-full cursor pointer-events-none"
+          ref={cursorRef}
+        ></div>
+        <header className="title w-full text-5xl pt-4 flex justify-center items-center relative">
+          <h1 className="text-center">Super Tic Tac Toe</h1>
           <button
+            className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 shadow-sm shadow-white"
             onClick={() => {
-              navigate("/play");
-            }}
-            className=""
-          >
-            Single Player
-          </button>
-          <button
-            onClick={() => {
-              navigate("/multiplayer");
+              setShowRules(true);
             }}
           >
-            Play Online (random)
+            Rules
           </button>
-          <button>Play with a friend</button>
-        </div>
-      </section>
-    </div>
+        </header>
+        <section className="mt-36">
+          <div className="flex flex-col items-center gap-10 text-2xl">
+            <button
+              onClick={() => {
+                navigate("/play");
+              }}
+              className=""
+            >
+              Single Player
+            </button>
+            <button
+              onClick={() => {
+                navigate("/multiplayer");
+              }}
+            >
+              Play Online (random)
+            </button>
+            <button>Play with a friend</button>
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 export default HomePage;

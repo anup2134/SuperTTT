@@ -1,6 +1,6 @@
 // import { WebSocket } from "ws";
-import { Game } from "./Game.ts";
-import { Player } from "./Player.ts";
+import { Game } from "./Game";
+import { Player } from "./Player";
 
 export class GameManager {
   private games: Game[];
@@ -23,14 +23,12 @@ export class GameManager {
       );
     } else {
       this.pendingPlayer = player;
-      player
-        .getSocket()
-        .send(
-          JSON.stringify({
-            type: "queue_joined",
-            message: "searching for an opponent",
-          })
-        );
+      player.getSocket().send(
+        JSON.stringify({
+          type: "queue_joined",
+          message: "searching for an opponent",
+        })
+      );
       console.log("player in queue", player.getName());
     }
   }

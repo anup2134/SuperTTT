@@ -1,5 +1,5 @@
-import { GameManager } from "./GameManager.ts";
-import { Player } from "./Player.ts";
+import { GameManager } from "./GameManager";
+import { Player } from "./Player";
 import crypto from "crypto";
 
 interface Move {

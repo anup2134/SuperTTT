@@ -1,9 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { getExpandLines, getGame } from "../components/utils/Objects";
 import Board from "../components/Board";
+import Timer from "../components/Timer";
+import { AppContext } from "../Context";
 
 const Multiplayer = () => {
-  const [ws, setWS] = useState(null);
+  const [ws, setWS] = useState(new WebSocket("ws://localhost:3000"));
   const [game, setGame] = useState(getGame());
   const [myTurn, setMyTurn] = useState(null);
   const mySymbol = useRef(null);
@@ -14,11 +16,12 @@ const Multiplayer = () => {
   const [allowedGrid, setAllowedGrid] = useState("");
   const [totalMoves, setTotalMoves] = useState(0);
   const [expandLines, setExpandLines] = useState(getExpandLines());
+  const { screenRes } = useContext(AppContext);
 
   //handle ws connection
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000?name=anup");
-    setWS(ws);
+    // const ws = ;
+    // setWS(ws);
     ws.onopen = () => {
       console.log("connection established");
     };
@@ -56,7 +59,6 @@ const Multiplayer = () => {
     };
 
     ws.onclose = () => {
-      setWS(null);
       setGame(getGame());
       setMyTurn(null);
       mySymbol.current = null;
@@ -70,7 +72,9 @@ const Multiplayer = () => {
       console.log("Connection closed");
     };
     return () => ws.close();
-  }, []);
+  }, [ws]);
+
+  console.log(ws);
 
   const handleOppMove = ({ i, j, x, y }) => {
     // console.log("opponent moved");
@@ -154,7 +158,18 @@ const Multiplayer = () => {
       expandLines={expandLines}
       setExpandLines={setExpandLines}
       handleMove={handleMove}
-    />
+    >
+      <div
+        className={`${
+          screenRes.width > screenRes.height
+            ? "top-1/2 left-[110%] -translate-y-1/2 flex-col"
+            : "top-[110%] gap-x-6 left-1/2 -translate-x-1/2 "
+        } absolute flex mt-4`}
+      >
+        <Timer player={"You"} start={myTurn} />
+        <Timer player={"Opponent"} start={!myTurn && mySymbol.current} />
+      </div>
+    </Board>
   );
 };
 
