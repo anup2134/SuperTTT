@@ -7,7 +7,7 @@ export class GameManager {
   private pendingPlayer: Player | null;
 
   constructor() {
-    console.log("game manager initiated");
+    //console.log("game manager initiated");
     this.games = [];
     this.pendingPlayer = null;
   }
@@ -16,11 +16,11 @@ export class GameManager {
     if (this.pendingPlayer !== null) {
       this.games.push(new Game(this.pendingPlayer, player, this));
       this.pendingPlayer = null;
-      console.log(
-        "players paired",
-        player.getName(),
-        player.getOpponent()?.getName()
-      );
+      //console.log(
+      // "players paired",
+      //   player.getName(),
+      //   player.getOpponent()?.getName()
+      // );
     } else {
       this.pendingPlayer = player;
       player.getSocket().send(
@@ -29,14 +29,14 @@ export class GameManager {
           message: "searching for an opponent",
         })
       );
-      console.log("player in queue", player.getName());
+      //console.log("player in queue", player.getName());
     }
   }
 
   removePlayer(player: Player) {
     if (this.pendingPlayer !== null) {
       if (this.pendingPlayer === player) {
-        console.log("player removed", player.getName());
+        //console.log("player removed", player.getName());
         this.pendingPlayer = null;
       }
     }
@@ -51,7 +51,7 @@ export class GameManager {
   }
 
   gameCompleted(id: number) {
-    console.log("game completed", id);
+    //console.log("game completed", id);
     this.games = this.games.filter((game) => {
       if (game.getGameId() === id) {
         game

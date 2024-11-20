@@ -11,7 +11,7 @@ export class Player {
   private timerId: NodeJS.Timeout | null;
 
   constructor(name: string, socket: WebSocket) {
-    console.log("player created ", name);
+    //console.log("player created ", name);
     const buffer = crypto.randomBytes(4);
     this.id = buffer.readUInt32LE(0);
     this.name = name;
@@ -49,7 +49,7 @@ export class Player {
   }
 
   public startTimer() {
-    console.log("timer started for ", this.name);
+    //console.log("timer started for ", this.name);
 
     this.timerId = setTimeout(() => {
       this.game?.setWinner(this.opponent!);
@@ -61,7 +61,7 @@ export class Player {
   }
 
   public startGame(game: Game, opponent: Player) {
-    console.log("game started for ", this.name);
+    //console.log("game started for ", this.name);
     this.opponent = opponent;
     this.game = game;
   }

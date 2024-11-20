@@ -25,7 +25,7 @@ export class Game {
   private playerTurn: Player;
 
   constructor(player1: Player, player2: Player, gameManager: GameManager) {
-    console.log("new game initaited");
+    //console.log("new game initaited");
     const buffer = crypto.randomBytes(4);
     this.gameId = buffer.readUInt32LE(0);
     this.player1 = player1;
@@ -80,7 +80,7 @@ export class Game {
     this.winner = null;
   }
   endGame() {
-    console.log("game ended ", this.gameId);
+    //console.log("game ended ", this.gameId);
     this.player1.dispose();
     this.player2.dispose();
     this.gameManagar.gameCompleted(this.gameId);
@@ -130,8 +130,8 @@ export class Game {
       player
         .getSocket()
         .send(JSON.stringify({ type: "warning", message: "invalid move" }));
-      // console.log(this.moves);
-      // console.log(this.game[i][j][x][y]);
+      // //console.log(this.moves);
+      // //console.log(this.game[i][j][x][y]);
       return;
     }
 
@@ -153,7 +153,7 @@ export class Game {
     // let playAnyWhere = false;
     const board = move[0] + move[1];
     if (this.completeBoards[board]) {
-      // console.log("board already complete invalid");
+      // //console.log("board already complete invalid");
       player
         .getSocket()
         .send(JSON.stringify({ type: "warning", message: "invalid move" }));
@@ -163,14 +163,14 @@ export class Game {
     let playAnyWhere = false;
     if (this.completeBoards[`${prevMove.x}${prevMove.y}`]) {
       playAnyWhere = true;
-      // console.log("play anywhere");
+      // //console.log("play anywhere");
     }
 
     // for (const board of this.completeBoards) {
     //   const { i: ci, j: cj } = board;
     //   if (ci === prevMove.x && cj === prevMove.y) {
     //     playAnyWhere = true;
-    //     console.log("play anywhere");
+    //     //console.log("play anywhere");
     //     // break;
     //   }
     //   if (ci === i && cj === j) {
@@ -209,7 +209,7 @@ export class Game {
       this.game[i][j][1][1] === this.game[i][j][2][2] &&
       this.game[i][j][0][0] !== 0
     ) {
-      // console.log("board claimed:", i, j);
+      // //console.log("board claimed:", i, j);
       this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
       this.checkForWinner(player);
       return;
@@ -220,7 +220,7 @@ export class Game {
       this.game[i][j][1][1] === this.game[i][j][2][0] &&
       this.game[i][j][0][2] !== 0
     ) {
-      // console.log("board claimed:", i, j);
+      // //console.log("board claimed:", i, j);
       this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
       this.checkForWinner(player);
       return;
@@ -232,7 +232,7 @@ export class Game {
         this.game[i][j][l][1] === this.game[i][j][l][2] &&
         this.game[i][j][l][0] !== 0
       ) {
-        // console.log("board claimed:", i, j);
+        // //console.log("board claimed:", i, j);
         this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
         this.checkForWinner(player);
         return;
@@ -243,7 +243,7 @@ export class Game {
         this.game[i][j][1][l] === this.game[i][j][2][l] &&
         this.game[i][j][0][l] !== 0
       ) {
-        // console.log("board claimed:", i, j);
+        // //console.log("board claimed:", i, j);
         this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
         this.checkForWinner(player);
         return;
@@ -259,7 +259,7 @@ export class Game {
       this.completeBoards["11"] === this.completeBoards["00"] &&
       this.completeBoards["11"] === this.completeBoards["22"]
     ) {
-      console.log("game complete");
+      //console.log("game complete");
       this.setWinner(player);
       return;
     }
@@ -271,7 +271,7 @@ export class Game {
       this.completeBoards["11"] === this.completeBoards["02"] &&
       this.completeBoards["11"] === this.completeBoards["20"]
     ) {
-      console.log("game complete");
+      //console.log("game complete");
       this.setWinner(player);
       return;
     }
@@ -284,7 +284,7 @@ export class Game {
         this.completeBoards[`${i}0`] === this.completeBoards[`${i}1`] &&
         this.completeBoards[`${i}0`] === this.completeBoards[`${i}2`]
       ) {
-        console.log("game complete");
+        //console.log("game complete");
         this.setWinner(player);
         return;
       }
@@ -296,7 +296,7 @@ export class Game {
         this.completeBoards[`0${i}`] === this.completeBoards[`1${i}`] &&
         this.completeBoards[`0${i}`] === this.completeBoards[`2${i}`]
       ) {
-        console.log("game complete");
+        //console.log("game complete");
         this.setWinner(player);
         return;
       }
@@ -304,7 +304,7 @@ export class Game {
   }
 
   setWinner(player: Player) {
-    console.log(`winner for game ${this.gameId}: `, player.getName());
+    //console.log(`winner for game ${this.gameId}: `, player.getName());
     player
       .getSocket()
       .send(JSON.stringify({ type: "terminate", message: "won" }));
@@ -334,7 +334,7 @@ export class Game {
       line.forEach((item) => (map += item));
       map += "\n";
     });
-    // console.log(map);
+    // //console.log(map);
     // player.getSocket().send(JSON.stringify({ board }));
   }
 }
