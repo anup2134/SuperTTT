@@ -5,7 +5,9 @@ import Timer from "../components/Timer";
 import { AppContext } from "../Context";
 
 const Multiplayer = () => {
-  const [ws, setWS] = useState(new WebSocket("ws://localhost:3000"));
+  const [ws, setWS] = useState(
+    new WebSocket(import.meta.env.VITE_BACKEND_WS_URL)
+  );
   const [game, setGame] = useState(getGame());
   const [myTurn, setMyTurn] = useState(null);
   const mySymbol = useRef(null);
@@ -20,8 +22,6 @@ const Multiplayer = () => {
 
   //handle ws connection
   useEffect(() => {
-    // const ws = ;
-    // setWS(ws);
     ws.onopen = () => {
       console.log("connection established");
     };
@@ -77,7 +77,6 @@ const Multiplayer = () => {
   console.log(ws);
 
   const handleOppMove = ({ i, j, x, y }) => {
-    // console.log("opponent moved");
     console.log(i, j, x, y);
     console.log("setting prev move 2:", i, j, x, y, 3 - mySymbol.current);
     setPrevMove({ i, j, x, y, player: 3 - mySymbol.current });
