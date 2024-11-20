@@ -1,6 +1,6 @@
 // import { WebSocket } from "ws";
-import { Game } from "./Game";
-import { Player } from "./Player";
+import { Game } from "./Game.js";
+import { Player } from "./Player.js";
 
 export class GameManager {
   private games: Game[];

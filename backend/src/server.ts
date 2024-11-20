@@ -1,8 +1,8 @@
 import express from "express";
 import http from "http";
 import { WebSocketServer } from "ws";
-import { GameManager } from "./GameManager";
-import { Player } from "./Player";
+import { GameManager } from "./GameManager.js";
+import { Player } from "./Player.js";
 
 const app = express();
 const server = http.createServer(app);

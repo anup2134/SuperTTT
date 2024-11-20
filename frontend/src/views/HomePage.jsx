@@ -47,7 +47,7 @@ const HomePage = () => {
 
   return (
     <>
-      {showRules && <Rules showRules={showRules} setShowRules={setShowRules} />}
+      {showRules && <Rules setShowRules={setShowRules} />}
       <div className="relative">
         <div
           className="opacity-40 rounded-full cursor pointer-events-none"

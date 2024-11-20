@@ -216,7 +216,7 @@ const Board = ({
   return (
     <>
       {!touchDevice && <Gradient />}
-      {showRules && <Rules showRules={showRules} setShowRules={setShowRules} />}
+      {showRules && <Rules setShowRules={setShowRules} />}
       <div className="mt-8 sm:mt-14">
         <Link
           to="/"

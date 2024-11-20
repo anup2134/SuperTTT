@@ -1,14 +1,6 @@
 import { useEffect } from "react";
 
-const Rules = ({ showRules, setShowRules }) => {
-  useEffect(() => {
-    if (showRules) document.body.style.opacity = "0.5";
-    else document.body.style.opacity = "1";
-    return () => {
-      document.body.style.backgroundColor = "1";
-    };
-  }, [showRules]);
-
+const Rules = ({ setShowRules }) => {
   return (
     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
       <button

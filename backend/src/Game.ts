@@ -1,5 +1,5 @@
-import { GameManager } from "./GameManager";
-import { Player } from "./Player";
+import { GameManager } from "./GameManager.js";
+import { Player } from "./Player.js";
 import crypto from "crypto";
 
 interface Move {
@@ -74,8 +74,7 @@ export class Game {
     this.playerTurn.startTimer();
     this.moves.push({ move: { i: -1, j: -1, x: -1, y: -1 }, time: Date.now() });
     this.completeBoards = {};
-    // this.getBoardATM(player1);
-    this.getBoardATM();
+    // this.getBoardATM();
   }
   dispose() {
     this.winner = null;
@@ -131,8 +130,8 @@ export class Game {
       player
         .getSocket()
         .send(JSON.stringify({ type: "warning", message: "invalid move" }));
-      console.log(this.moves);
-      console.log(this.game[i][j][x][y]);
+      // console.log(this.moves);
+      // console.log(this.game[i][j][x][y]);
       return;
     }
 
@@ -141,8 +140,7 @@ export class Game {
       this.game[i][j][x][y] = player === this.player1 ? 1 : 2;
       this.playerTurn.endTimer();
       this.playerTurn = player === this.player1 ? this.player2 : this.player1;
-      this.getBoardATM();
-      // this.getBoardATM(this.player2);
+      // this.getBoardATM();
       player.getSocket().send(JSON.stringify({ type: "OK" }));
       player
         .getOpponent()
@@ -155,7 +153,7 @@ export class Game {
     // let playAnyWhere = false;
     const board = move[0] + move[1];
     if (this.completeBoards[board]) {
-      console.log("board already complete invalid");
+      // console.log("board already complete invalid");
       player
         .getSocket()
         .send(JSON.stringify({ type: "warning", message: "invalid move" }));
@@ -165,7 +163,7 @@ export class Game {
     let playAnyWhere = false;
     if (this.completeBoards[`${prevMove.x}${prevMove.y}`]) {
       playAnyWhere = true;
-      console.log("play anywhere");
+      // console.log("play anywhere");
     }
 
     // for (const board of this.completeBoards) {
@@ -195,7 +193,7 @@ export class Game {
     this.setCompleteBoard(i, j, player);
     this.playerTurn.endTimer();
     this.playerTurn = player === this.player1 ? this.player2 : this.player1;
-    this.getBoardATM();
+    // this.getBoardATM();
     player.getSocket().send(JSON.stringify({ type: "OK" }));
     player
       .getOpponent()
@@ -211,7 +209,7 @@ export class Game {
       this.game[i][j][1][1] === this.game[i][j][2][2] &&
       this.game[i][j][0][0] !== 0
     ) {
-      console.log("board claimed:", i, j);
+      // console.log("board claimed:", i, j);
       this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
       this.checkForWinner(player);
       return;
@@ -222,7 +220,7 @@ export class Game {
       this.game[i][j][1][1] === this.game[i][j][2][0] &&
       this.game[i][j][0][2] !== 0
     ) {
-      console.log("board claimed:", i, j);
+      // console.log("board claimed:", i, j);
       this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
       this.checkForWinner(player);
       return;
@@ -234,7 +232,7 @@ export class Game {
         this.game[i][j][l][1] === this.game[i][j][l][2] &&
         this.game[i][j][l][0] !== 0
       ) {
-        console.log("board claimed:", i, j);
+        // console.log("board claimed:", i, j);
         this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
         this.checkForWinner(player);
         return;
@@ -245,7 +243,7 @@ export class Game {
         this.game[i][j][1][l] === this.game[i][j][2][l] &&
         this.game[i][j][0][l] !== 0
       ) {
-        console.log("board claimed:", i, j);
+        // console.log("board claimed:", i, j);
         this.completeBoards[`${i}${j}`] = player === this.player1 ? 1 : 2;
         this.checkForWinner(player);
         return;
@@ -336,7 +334,7 @@ export class Game {
       line.forEach((item) => (map += item));
       map += "\n";
     });
-    console.log(map);
+    // console.log(map);
     // player.getSocket().send(JSON.stringify({ board }));
   }
 }

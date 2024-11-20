@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { Game } from "./Game";
+import { Game } from "./Game.js";
 import crypto from "crypto";
 
 export class Player {
