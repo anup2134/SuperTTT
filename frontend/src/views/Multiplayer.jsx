@@ -3,6 +3,7 @@ import { getExpandLines, getGame } from "../components/utils/Objects";
 import Board from "../components/Board";
 import Timer from "../components/Timer";
 import { AppContext } from "../Context";
+import GameEnd from "../components/GameEnd";
 
 const Multiplayer = () => {
   const [ws, setWS] = useState(
@@ -11,6 +12,7 @@ const Multiplayer = () => {
   const [game, setGame] = useState(getGame());
   const [myTurn, setMyTurn] = useState(null);
   const mySymbol = useRef(null);
+  const [freezeTimer, setFreezeTimer] = useState(false);
   const [completeBoards, setCompleteBoards] = useState({});
   const [prevMove, setPrevMove] = useState({});
   const [winner, setWinner] = useState(null);
@@ -18,6 +20,7 @@ const Multiplayer = () => {
   const [allowedGrid, setAllowedGrid] = useState("");
   const [totalMoves, setTotalMoves] = useState(0);
   const [expandLines, setExpandLines] = useState(getExpandLines());
+  const [gameComplete, setGameComplete] = useState(false);
   const { screenRes } = useContext(AppContext);
 
   //handle ws connection
@@ -38,11 +41,12 @@ const Multiplayer = () => {
       }
 
       if (message.type === "init") {
+        console.log(message);
         if (message.message === "your turn") {
           console.log("your turn");
           mySymbol.current = 1;
           setMyTurn(true);
-        } else {
+        } else if ("opponent turn") {
           console.log("opponent's turn");
           mySymbol.current = 2;
           setMyTurn(false);
@@ -58,7 +62,13 @@ const Multiplayer = () => {
       }
     };
 
-    ws.onclose = () => {
+    ws.onclose = (event) => {
+      if (event.code === 1000) {
+        if (event.reason === "opponent left") {
+          setWinner(mySymbol.current);
+        }
+      }
+      setGameComplete(true);
       setGame(getGame());
       setMyTurn(null);
       mySymbol.current = null;
@@ -74,11 +84,11 @@ const Multiplayer = () => {
     return () => ws.close();
   }, [ws]);
 
-  console.log(ws);
+  // console.log(ws);
 
   const handleOppMove = ({ i, j, x, y }) => {
-    console.log(i, j, x, y);
-    console.log("setting prev move 2:", i, j, x, y, 3 - mySymbol.current);
+    // console.log(i, j, x, y);
+    // console.log("setting prev move 2:", i, j, x, y, 3 - mySymbol.current);
     setPrevMove({ i, j, x, y, player: 3 - mySymbol.current });
     setGame((prevgame) => ({
       ...prevgame,
@@ -110,7 +120,7 @@ const Multiplayer = () => {
   useEffect(() => {
     if (myTurn) {
       console.log("my turn");
-    } else {
+    } else if (myTurn === false) {
       console.log("opponent's turn");
     }
   }, [myTurn]);
@@ -157,6 +167,7 @@ const Multiplayer = () => {
       expandLines={expandLines}
       setExpandLines={setExpandLines}
       handleMove={handleMove}
+      setGameComplete={setGameComplete}
     >
       <div
         className={`${
@@ -167,6 +178,7 @@ const Multiplayer = () => {
       >
         <Timer player={"You"} start={myTurn} />
         <Timer player={"Opponent"} start={!myTurn && mySymbol.current} />
+        {myTurn === null && <div>Waiting for an opponent...</div>}
       </div>
     </Board>
   );

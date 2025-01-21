@@ -4,17 +4,17 @@ import crypto from "crypto";
 
 export class Player {
   private id: number;
-  private name: string;
+  // private name: string;
   private socket: WebSocket;
   private game: Game | null;
   private opponent: Player | null;
   private timerId: NodeJS.Timeout | null;
 
-  constructor(name: string, socket: WebSocket) {
+  constructor(socket: WebSocket) {
     //console.log("player created ", name);
     const buffer = crypto.randomBytes(4);
     this.id = buffer.readUInt32LE(0);
-    this.name = name;
+    // this.name = name;
     this.socket = socket;
     this.opponent = null;
     this.game = null;
@@ -32,9 +32,9 @@ export class Player {
     return this.id;
   }
 
-  public getName(): string {
-    return this.name;
-  }
+  // public getName(): string {
+  //   return this.name;
+  // }
 
   public getSocket(): WebSocket {
     return this.socket;

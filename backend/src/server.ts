@@ -10,9 +10,9 @@ const wss = new WebSocketServer({ server });
 const gameManager = new GameManager();
 
 wss.on("connection", function connection(ws, req) {
-  const params = req.url?.split("?")[1]?.split("=");
-  const name = params ? params[1] : "";
-  const player = new Player(name, ws);
+  // const params = req.url?.split("?")[1]?.split("=");
+  // const name = params ? params[1] : "";
+  const player = new Player(ws);
   gameManager.addPlayer(player);
 
   ws.on("error", console.error);

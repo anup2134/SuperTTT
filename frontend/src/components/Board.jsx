@@ -24,6 +24,7 @@ const Board = ({
   allowedAnywhere,
   setAllowedAnywhere,
   allowedGrid,
+  setGameComplete,
   setAllowedGrid,
   totalMoves,
   expandLines,
@@ -33,6 +34,7 @@ const Board = ({
 }) => {
   const [touchDevice, setTouchDevice] = useState(false);
   const { screenRes } = useContext(AppContext);
+  // const [gameComplete, setGameComplete] = useState(false);
 
   useEffect(() => {
     if (prevMove.i === undefined) {
@@ -194,8 +196,10 @@ const Board = ({
   useEffect(() => {
     if (winner === null && totalMoves >= 81) {
       console.log("draw");
+      setGameComplete(true);
     } else if (winner) {
       console.log("winner is:", winner);
+      setGameComplete(true);
     }
   }, [winner, totalMoves]);
 

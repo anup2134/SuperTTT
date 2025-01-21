@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 
 // eslint-disable-next-line react/prop-types
-const Timer = ({ start, player }) => {
+const Timer = ({ freezeTimer, start, player }) => {
   const [time, setTime] = useState(30);
 
   useEffect(() => {
     setTime(30);
-
-    if (start) {
+    if (start && !freezeTimer) {
       const timeId = setInterval(() => {
         setTime((prevTime) => {
           if (prevTime === 1) clearInterval(timeId);

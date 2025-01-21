@@ -25,7 +25,9 @@ export class Game {
   private playerTurn: Player;
 
   constructor(player1: Player, player2: Player, gameManager: GameManager) {
-    //console.log("new game initaited");
+    console.log("new game initaited");
+    console.log("player id:", player1.getId());
+    console.log("player id:", player2.getId());
     const buffer = crypto.randomBytes(4);
     this.gameId = buffer.readUInt32LE(0);
     this.player1 = player1;
@@ -130,8 +132,6 @@ export class Game {
       player
         .getSocket()
         .send(JSON.stringify({ type: "warning", message: "invalid move" }));
-      // //console.log(this.moves);
-      // //console.log(this.game[i][j][x][y]);
       return;
     }
 
@@ -163,23 +163,7 @@ export class Game {
     let playAnyWhere = false;
     if (this.completeBoards[`${prevMove.x}${prevMove.y}`]) {
       playAnyWhere = true;
-      // //console.log("play anywhere");
     }
-
-    // for (const board of this.completeBoards) {
-    //   const { i: ci, j: cj } = board;
-    //   if (ci === prevMove.x && cj === prevMove.y) {
-    //     playAnyWhere = true;
-    //     //console.log("play anywhere");
-    //     // break;
-    //   }
-    //   if (ci === i && cj === j) {
-    //     player
-    //       .getSocket()
-    //       .send(JSON.stringify({ type: "warning", message: "invalid move" }));
-    //     return;
-    //   }
-    // }
 
     if ((prevMove.x !== i || prevMove.y !== j) && !playAnyWhere) {
       player
@@ -316,25 +300,25 @@ export class Game {
     this.endGame();
   }
 
-  getBoardATM() {
-    const board: string[][] = [];
-    for (let i = 0; i < 3; i++) {
-      for (let x = 0; x < 3; x++) {
-        const line: string[] = [];
-        for (let j = 0; j < 3; j++) {
-          for (let y = 0; y < 3; y++) {
-            line.push(this.game[i][j][x][y].toString());
-          }
-        }
-        board.push(line);
-      }
-    }
-    let map = "";
-    board.forEach((line) => {
-      line.forEach((item) => (map += item));
-      map += "\n";
-    });
-    // //console.log(map);
-    // player.getSocket().send(JSON.stringify({ board }));
-  }
+  // getBoardATM() {
+  //   const board: string[][] = [];
+  //   for (let i = 0; i < 3; i++) {
+  //     for (let x = 0; x < 3; x++) {
+  //       const line: string[] = [];
+  //       for (let j = 0; j < 3; j++) {
+  //         for (let y = 0; y < 3; y++) {
+  //           line.push(this.game[i][j][x][y].toString());
+  //         }
+  //       }
+  //       board.push(line);
+  //     }
+  //   }
+  //   let map = "";
+  //   board.forEach((line) => {
+  //     line.forEach((item) => (map += item));
+  //     map += "\n";
+  //   });
+  //   // //console.log(map);
+  //   // player.getSocket().send(JSON.stringify({ board }));
+  // }
 }

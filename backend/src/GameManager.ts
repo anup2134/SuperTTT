@@ -29,14 +29,13 @@ export class GameManager {
           message: "searching for an opponent",
         })
       );
-      //console.log("player in queue", player.getName());
+      console.log("player in queue", player.getId());
     }
   }
 
   removePlayer(player: Player) {
     if (this.pendingPlayer !== null) {
       if (this.pendingPlayer === player) {
-        //console.log("player removed", player.getName());
         this.pendingPlayer = null;
       }
     }
@@ -44,8 +43,8 @@ export class GameManager {
       const opponent = player.getOpponent();
       if (opponent) {
         player.getGame()?.setWinner(opponent);
+        opponent.getSocket().close(1000, "opponent left");
         player.getGame()?.endGame();
-        opponent.getSocket().close(1000, "Game completed");
       }
     }
   }
