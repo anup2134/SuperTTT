@@ -50,19 +50,19 @@ const HomePage = () => {
       {showRules && <Rules setShowRules={setShowRules} />}
       <div className="relative">
         <div
-          className="opacity-40 rounded-full cursor pointer-events-none"
+          className="opacity-40 rounded-full cursor pointer-events-none sm:block hidden"
           ref={cursorRef}
         ></div>
         <header className="title w-full text-5xl pt-4 flex justify-center items-center relative">
-          <h1 className="text-center">Super Tic Tac Toe</h1>
-          <button
+          <h1 className="text-center medium">Super Tic Tac Toe</h1>
+          {/* <button
             className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 shadow-sm shadow-white"
             onClick={() => {
               setShowRules(true);
             }}
           >
             Rules
-          </button>
+          </button> */}
         </header>
         <section className="mt-36">
           <div className="flex flex-col items-center gap-10 text-2xl">
@@ -79,9 +79,15 @@ const HomePage = () => {
                 navigate("/multiplayer");
               }}
             >
-              Play Online (random)
+              Play Online
             </button>
-            <button>Play with a friend</button>
+            <button
+              onClick={() => {
+                setShowRules(true);
+              }}
+            >
+              Rules
+            </button>
           </div>
         </section>
       </div>

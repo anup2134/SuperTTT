@@ -32,9 +32,8 @@ const Board = ({
   handleMove,
   children,
 }) => {
-  const [touchDevice, setTouchDevice] = useState(false);
+  // const [touchDevice, setTouchDevice] = useState(false);
   const { screenRes } = useContext(AppContext);
-  // const [gameComplete, setGameComplete] = useState(false);
 
   useEffect(() => {
     if (prevMove.i === undefined) {
@@ -203,40 +202,57 @@ const Board = ({
     }
   }, [winner, totalMoves]);
 
-  useEffect(() => {
-    const handleDevice = () => {
-      setTouchDevice(true);
-    };
+  // useEffect(() => {
+  //   const handleDevice = () => {
+  //     setTouchDevice(true);
+  //   };
 
-    window.addEventListener("touchstart", handleDevice);
+  //   window.addEventListener("touchstart", handleDevice);
 
-    return () => {
-      window.removeEventListener("touchstart", handleDevice);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("touchstart", handleDevice);
+  //   };
+  // }, []);
 
   const [showRules, setShowRules] = useState(false);
 
   return (
     <>
-      {!touchDevice && <Gradient />}
+      <Gradient />
       {showRules && <Rules setShowRules={setShowRules} />}
-      <div className="mt-8 sm:mt-14">
-        <Link
-          to="/"
-          className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 shadow-sm shadow-white"
-        >
-          Home
-        </Link>
-        <button
-          className="text-base border-white border-2 rounded-full px-5 py-2 absolute right-10 mt-12 shadow-sm shadow-white"
-          onClick={() => {
-            setShowRules(true);
-          }}
-        >
-          Rules
-        </button>
+      <div className="">
+        {/* <div className="flex"> */}
+        {/* </div> */}
         <div className="relative w-max m-auto">
+          <div className="flex mb-4 sm:mt-0 mt-4">
+            <Link
+              to="/"
+              className="text-base border-white border-2 rounded-full px-5 py-2 shadow-sm shadow-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-arrow-big-left-icon lucide-arrow-big-left"
+              >
+                <path d="M18 15h-6v4l-7-7 7-7v4h6v6z" />
+              </svg>
+            </Link>
+            {/* <button
+              className="text-base border-white border-2 rounded-full px-5 py-2  shadow-sm shadow-white"
+              onClick={() => {
+                setShowRules(true);
+              }}
+            >
+              Rules
+            </button> */}
+          </div>
           {[0, 1, 2].map((i) => {
             return (
               <div
@@ -244,11 +260,11 @@ const Board = ({
                 id={i}
                 className={`${
                   screenRes.width <= screenRes.height
-                    ? "w-[90vw] h-[30vw] "
+                    ? "w-[90vw] h-[30vw]"
                     : "w-[90vh] h-[30vh]"
                 } border flex border-[#04d9ff]`}
               >
-                <div></div>
+                {/* <div></div> */}
                 {[0, 1, 2].map((j) => {
                   return (
                     <div

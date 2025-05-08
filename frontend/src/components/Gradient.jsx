@@ -46,7 +46,7 @@ const Gradient = () => {
   }, [mouseLoc]);
   return (
     <div
-      className="opacity-40 rounded-full cursor pointer-events-none"
+      className="opacity-40 rounded-full cursor pointer-events-none sm:block hidden"
       ref={cursorRef}
     ></div>
   );

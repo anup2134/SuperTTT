@@ -1,5 +1,11 @@
 {
   "watch": ["src"],
-  "ext": "ts",
-  "exec": "npx ts-node --esm ./src/server.ts"
+  "ignore": [".git", "node_modules/", "dist/"],
+  "ext": "js,ts,json",
+  "exec": "npm run build && npm run start",
+  "verbose": true,
+  "events": {
+    "start": "echo 'Starting nodemon watch...'",
+    "restart": "echo 'Restarting due to changes...'"
+  }
 }

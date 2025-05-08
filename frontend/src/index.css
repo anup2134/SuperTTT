@@ -2,16 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Quilon-Regular";
+  src: url("/fonts/Quilon-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Quilon-Medium";
+  src: url("/fonts/Quilon-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+
 #root {
   height: 100%;
 }
+.medium {
+  font-family: "Quilon-Medium", system-ui;
+  font-weight: 500;
+}
 
-.title {
-  font-family: "Sofadi One", system-ui;
-}
-.lato {
-  font-family: "Lato", sans-serif;
-}
 .cursor {
   height: 500px;
   position: absolute;
@@ -37,5 +50,14 @@ body {
   height: 100%;
   color: white;
   background: black;
-  font-family: "Sofadi One", system-ui;
+  font-family: "Quilon-Regular", system-ui;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+@media (min-width: 640px) {
+  html,
+  body {
+    overflow: hidden;
+  }
 }

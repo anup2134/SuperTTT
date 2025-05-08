@@ -12,6 +12,7 @@ const SuperTTT = () => {
   const [allowedGrid, setAllowedGrid] = useState("");
   const [totalMoves, setTotalMoves] = useState(0);
   const [expandLines, setExpandLines] = useState(getExpandLines());
+  const [gameComplete, setGameComplete] = useState(false);
 
   const validMove = (i, j) => {
     if (prevMove.x === undefined || prevMove.y === undefined) {
@@ -69,6 +70,7 @@ const SuperTTT = () => {
       expandLines={expandLines}
       setExpandLines={setExpandLines}
       handleMove={handleMove}
+      setGameComplete={setGameComplete}
     />
   );
 };
